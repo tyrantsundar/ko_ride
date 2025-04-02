@@ -13,3 +13,60 @@ ko_ride/
 │── ko_ride-frontend/        # Future frontend app (if needed)
 │── docker-compose.yml       # Docker orchestration
 │── README.md                # Documentation
+
+
+
+
+⏳ Estimated Timeline (8-10 Weeks)
+✅ Phase 1: Project Setup & Infrastructure (Week 1-2)
+✅ Set up Git repository and project structure. (Day 1)
+
+✅ Initialize 3 microservices with Spring Boot. (Day 2-4)
+
+✅ Configure Kafka, PostgreSQL, Redis using Docker. (Day 5-7)
+
+✅ Test local environment with Docker Compose. (Day 8)
+
+🚗 Phase 2: Ride Service (Week 3-4)
+✅ Ride Creation & Matching Algorithm (Basic driver-user allocation).
+
+✅ Design and implement REST APIs for trip creation, status updates.
+
+✅ Store trips in PostgreSQL and optimize queries.
+
+✅ Publish events to Kafka (e.g., trip_created, trip_completed).
+
+✅ Implement basic unit & integration tests.
+
+📩 Phase 3: Notification Service (Week 5)
+✅ Consume Kafka events for trip updates.
+
+✅ Implement real-time notifications for user & driver (WebSocket or email/SMS).
+
+✅ Store notifications (MongoDB or Redis for temporary caching).
+
+✅ Optimize message retry and failure handling.
+
+💰 Phase 4: Payment Service (Week 6-7)
+✅ Implement payment processing (Stripe, Razorpay, or dummy logic).
+
+✅ Handle ride fare calculations, discounts, refunds.
+
+✅ Secure transactions with Idempotency, retries.
+
+✅ Store payment records in PostgreSQL.
+
+✅ Test end-to-end payment flow.
+
+🚀 Phase 5: Optimization & Deployment (Week 8-10)
+✅ Add caching (Redis) for trip lookups.
+
+✅ Implement load testing for scalability.
+
+✅ Write API documentation (Swagger).
+
+✅ Deploy to AWS/GCP using Kubernetes.
+
+✅ Optimize database indexes & queries.
+
+✅ Final testing and bug fixes.
