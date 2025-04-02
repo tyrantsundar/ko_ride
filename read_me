@@ -1,0 +1,15 @@
+The initial plan :
+
+ko_ride/
+│── ko_ride-backend/         # Spring Boot backend
+│   ├── src/main/java/com/koride/  # Main app
+│   ├── src/main/resources/  # Config files
+│   ├── Dockerfile           # Docker setup
+│   ├── pom.xml / build.gradle
+│── ko_ride-infra/           # Infrastructure setup
+│   ├── kafka/               # Kafka setup
+│   ├── redis/               # Redis setup
+│   ├── postgresql/          # Database setup
+│── ko_ride-frontend/        # Future frontend app (if needed)
+│── docker-compose.yml       # Docker orchestration
+│── README.md                # Documentation
