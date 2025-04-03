@@ -1,0 +1,91 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ko_ride_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ko_ride_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ko_ride_network
+
+  redis:
+    image: redis:latest
+    container_name: ko_ride_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - ko_ride_network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: ko_ride_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - ko_ride_network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: ko_ride_kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - ko_ride_network
+
+  ride-service:
+    build:
+      context: ./ko_ride-backend/ride-service
+    container_name: ko_ride_ride-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - kafka
+    networks:
+      - ko_ride_network
+
+  notification-service:
+    build:
+      context: ./ko_ride-backend/notification-service
+    container_name: ko_ride_notification-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+    networks:
+      - ko_ride_network
+
+  payment-service:
+    build:
+      context: ./ko_ride-backend/payment-service
+    container_name: ko_ride_payment-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql
+    networks:
+      - ko_ride_network
+
+networks:
+  ko_ride_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
