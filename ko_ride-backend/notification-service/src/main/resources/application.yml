@@ -1,2 +1,29 @@
 server:
   port: 8082
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/ko_ride_db
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+event:
+  notification:
+    topics:
+      trip-request: ride.requests
+      ride-accepted: ride.accepted
+      ride-completed: ride.completed
+      payment-initiated: payment.initiated
