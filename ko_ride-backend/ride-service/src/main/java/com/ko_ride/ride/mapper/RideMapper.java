@@ -26,7 +26,6 @@ public interface RideMapper {
     @Mapping(target = "driver", source = "driverId", qualifiedByName = "driverFromId")
     @Mapping(target = "fare", source = "cost")
     @Mapping(target = "vehicle", source = "vehicleId", qualifiedByName = "vehicleFromId")
-    @Mapping(target = "payment", ignore = true)
     Ride toEntity(RideDTO rideDTO);
 
     LocationDTO toLocationDTO(Location location);

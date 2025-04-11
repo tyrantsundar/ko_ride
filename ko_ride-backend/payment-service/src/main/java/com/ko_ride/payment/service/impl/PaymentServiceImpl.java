@@ -58,6 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
                 String referenceId = paymentStrategy.process(payment.getId(), paymentMethodDto);
                 paymentMethod.setRefernceId(referenceId);
                 paymentMethod.setStatus(PaymentStatus.SUCCESS);
+                paymentMethod.setPayment(payment);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to process payment method: " + paymentMethodDto.getMethod(), e);
             }

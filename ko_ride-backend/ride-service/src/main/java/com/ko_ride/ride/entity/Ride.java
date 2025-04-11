@@ -46,14 +46,10 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private RideStatus status;
 
-    @OneToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
     public Ride() {
     }
 
-    public Ride(Long rideId, User user, Driver driver, Vehicle vehicle, Location startLocation, Location targetLocation, LocalDateTime startTime, LocalDateTime endTime, Double distance, Double fare, RideStatus status, Payment payment) {
+    public Ride(Long rideId, User user, Driver driver, Vehicle vehicle, Location startLocation, Location targetLocation, LocalDateTime startTime, LocalDateTime endTime, Double distance, Double fare, RideStatus status) {
         this.rideId = rideId;
         this.user = user;
         this.driver = driver;
@@ -65,7 +61,6 @@ public class Ride {
         this.distance = distance;
         this.fare = fare;
         this.status = status;
-        this.payment = payment;
     }
 
     public Long getRideId() {
@@ -154,13 +149,5 @@ public class Ride {
 
     public void setStatus(RideStatus status) {
         this.status = status;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
     }
 }
