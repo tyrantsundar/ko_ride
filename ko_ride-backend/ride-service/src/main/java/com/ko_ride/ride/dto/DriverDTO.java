@@ -14,16 +14,19 @@ public class DriverDTO {
 
     private String status; // ONLINE, OFFLINE, BUSY
 
+    private double rating;
+
     public DriverDTO() {
     }
 
-    public DriverDTO(Long driverId, String name, String mail, String mobileNumber, Long vehicleId, String status) {
+    public DriverDTO(Long driverId, String name, String mail, String mobileNumber, Long vehicleId, String status, double rating) {
         this.driverId = driverId;
         this.name = name;
         this.mail = mail;
         this.mobileNumber = mobileNumber;
         this.vehicleId = vehicleId;
         this.status = status;
+        this.rating = rating;
     }
 
     public Long getDriverId() {
@@ -72,5 +75,13 @@ public class DriverDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

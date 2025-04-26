@@ -23,6 +23,11 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Ride> rides;
+    /**
+     * 1        M
+     * User     Ride
+     * 1        1
+     * **/
 
 
     public User() {
@@ -37,16 +42,6 @@ public class User {
         this.passWord = passWord;
         this.rides = rides;
     }
-
-    /**
-     * 1        M
-     * User     Ride
-     * 1        1
-     * **/
-
-
-
-
 
     public Long getUserId() {
         return userId;

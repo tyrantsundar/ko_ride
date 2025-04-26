@@ -34,16 +34,19 @@ public class Driver {
      * 1        1
      * */
 
+    private double rating;
+
     public Driver() {
     }
 
-    public Driver(Long driverId, String name, String mail, String mobileNumber, Vehicle vehicle, List<Ride> rides) {
+    public Driver(Long driverId, String name, String mail, String mobileNumber, Vehicle vehicle, List<Ride> rides, double rating) {
         this.driverId = driverId;
         this.name = name;
         this.mail = mail;
         this.mobileNumber = mobileNumber;
         this.vehicle = vehicle;
         this.rides = rides;
+        this.rating = rating;
     }
 
     public Long getDriverId() {
@@ -93,4 +96,13 @@ public class Driver {
     public void setRides(List<Ride> rides) {
         this.rides = rides;
     }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
 }

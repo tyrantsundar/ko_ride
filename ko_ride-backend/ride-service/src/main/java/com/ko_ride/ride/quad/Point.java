@@ -3,9 +3,9 @@ package com.ko_ride.ride.quad;
 public class Point {
     private double lat; // latitude
     private double lon; // longitude
-    private String driverId;
+    private long driverId;
 
-    public Point(double lat, double lon, String driverId) {
+    public Point(double lat, double lon, long driverId) {
         this.lat = lat;
         this.lon = lon;
         this.driverId = driverId;
@@ -30,11 +30,11 @@ public class Point {
         this.lon = lon;
     }
 
-    public String getDriverId() {
+    public Long getDriverId() {
         return driverId;
     }
 
-    public void setDriverId(String driverId) {
+    public void setDriverId(Long driverId) {
         this.driverId = driverId;
     }
 

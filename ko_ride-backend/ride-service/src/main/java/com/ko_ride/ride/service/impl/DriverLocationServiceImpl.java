@@ -1,5 +1,6 @@
 package com.ko_ride.ride.service.impl;
 
+import com.ko_ride.ride.dto.DriverDTO;
 import com.ko_ride.ride.dto.DriverLocationRequest;
 import com.ko_ride.ride.dto.NearbyDriversRequest;
 import com.ko_ride.ride.dto.NearbyDriversResponse;
@@ -7,18 +8,26 @@ import com.ko_ride.ride.quad.Point;
 import com.ko_ride.ride.quad.QuadTree;
 import com.ko_ride.ride.quad.Rectangle;
 import com.ko_ride.ride.service.DriverLocationService;
+import com.ko_ride.ride.service.DriverService;
+import com.ko_ride.ride.util.DistanceUtil;
+import org.springframework.data.geo.Distance;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DriverLocationServiceImpl implements DriverLocationService {
 
     private final QuadTree quadTree;
 
-    public DriverLocationServiceImpl() {
+    private DriverService driverService;
+
+    public DriverLocationServiceImpl(DriverService driverService) {
+        this.driverService = driverService;
         // Initial boundary can be the whole city or country range (ex: India map bounds)
         this.quadTree = new QuadTree(
                 new Rectangle(20.5937, 78.9629, 20, 20), 4
@@ -46,27 +55,22 @@ public class DriverLocationServiceImpl implements DriverLocationService {
 
         List<NearbyDriversResponse> result = new ArrayList<>();
         for (Point p : candidates) {
-
-            double distance = haversine(lat, lon, p.getLat(), p.getLon());
-            System.out.println("Driver :: "+p.getDriverId()+" distance :: "+distance);
-            if (distance <= radius) {
-                result.add(new NearbyDriversResponse(p.getDriverId(), distance));
+            double distanceKm = DistanceUtil.haversine(lat, lon, p.getLat(), p.getLon());
+            Optional<DriverDTO> driverOptional = driverService.getDriverById(p.getDriverId());
+            if(driverOptional.isEmpty()){
+                System.out.println("Driver with id "+p.getDriverId()+" is not present in the geo point.");
+                continue;
+            }
+            DriverDTO driverDTO = driverOptional.get();
+            double etaInMin = DistanceUtil.calculateETA(distanceKm,driverDTO.getRating(),"normal", LocalTime.now());
+            System.out.println("Driver :: "+p.getDriverId()+" distance :: "+distanceKm+" ETA :: "+etaInMin);
+            if (distanceKm <= radius) {
+                result.add(new NearbyDriversResponse(p.getDriverId(), distanceKm, etaInMin));
             }
         }
 
         result.sort(Comparator.comparingDouble(NearbyDriversResponse::getDistanceInKm));
         return result;
-    }
-
-    private double haversine(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371; // Earth radius in km
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
     }
 
 }

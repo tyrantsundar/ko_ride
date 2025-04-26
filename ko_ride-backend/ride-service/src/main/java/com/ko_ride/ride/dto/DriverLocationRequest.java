@@ -1,24 +1,24 @@
 package com.ko_ride.ride.dto;
 
 public class DriverLocationRequest {
-    private String driverId;
+    private Long driverId;
     private double lat;
     private double lon;
 
     public DriverLocationRequest() {
     }
 
-    public DriverLocationRequest(String driverId, double lat, double lon) {
+    public DriverLocationRequest(Long driverId, double lat, double lon) {
         this.driverId = driverId;
         this.lat = lat;
         this.lon = lon;
     }
 
-    public String getDriverId() {
+    public Long getDriverId() {
         return driverId;
     }
 
-    public void setDriverId(String driverId) {
+    public void setDriverId(Long driverId) {
         this.driverId = driverId;
     }
 

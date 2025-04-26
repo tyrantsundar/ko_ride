@@ -24,6 +24,10 @@ public class Ride {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
+    @OneToOne
+    @JoinColumn(name = "rating_id")
+    private RideRating rideRating;
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "latitude", column = @Column(name = "start_latitude")),
@@ -149,5 +153,13 @@ public class Ride {
 
     public void setStatus(RideStatus status) {
         this.status = status;
+    }
+
+    public RideRating getRideRating() {
+        return rideRating;
+    }
+
+    public void setRideRating(RideRating rideRating) {
+        this.rideRating = rideRating;
     }
 }
