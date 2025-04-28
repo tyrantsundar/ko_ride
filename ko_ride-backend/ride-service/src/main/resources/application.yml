@@ -34,3 +34,7 @@ event:
       ride-accepted: ride.accepted
       ride-completed: ride.completed
       payment-initiated: payment.initiated
+
+openweather:
+  api:
+    key: 28ef2c9009e7a45db92fadc3ffcfc650

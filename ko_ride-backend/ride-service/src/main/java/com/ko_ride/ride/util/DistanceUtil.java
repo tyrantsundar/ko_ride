@@ -1,5 +1,7 @@
 package com.ko_ride.ride.util;
 
+import com.ko_ride.ride.model.WeatherInfo;
+
 import java.time.LocalTime;
 import java.util.Random;
 
@@ -64,15 +66,16 @@ public class DistanceUtil {
 //        return distanceKm / speedKmpMin; // ETA in minutes
 //    }
 
-    public static double calculateETA(double distanceKm, double driverRating, String weather, LocalTime timeOfDay) {
+    public static double calculateETA(double distanceKm, double driverRating, WeatherInfo weather, LocalTime timeOfDay) {
         double effectiveSpeed = calculateEffectiveSpeed(driverRating, weather, timeOfDay);
         double speedKmPerMin = effectiveSpeed / 60.0;
         return distanceKm / speedKmPerMin;
     }
 
-    public static double calculateEffectiveSpeed(double driverRating, String weather, LocalTime timeOfDay) {
+    public static double calculateEffectiveSpeed(double driverRating, WeatherInfo weather, LocalTime timeOfDay) {
         double timeFactor = getTimeOfDayFactor(timeOfDay);
         double weatherFactor = getWeatherFactor(weather);
+        System.out.println("Current WeatherFactor ::  "+weatherFactor);
         double driverFactor = getDriverProfileFactor(driverRating);
         double trafficFactor = getRandomTrafficFactor();
 
@@ -92,17 +95,29 @@ public class DistanceUtil {
         return 1.0; // Normal times
     }
 
-    // Adjust speed based on weather conditions
-    private static double getWeatherFactor(String weather) {
-        if (weather == null) {
+    private static double getWeatherFactor(WeatherInfo weatherInfo) {
+        if (weatherInfo == null) {
             return 1.0;
         }
-        weather = weather.toLowerCase();
-        if (weather.contains("rain") || weather.contains("storm") || weather.contains("snow")) {
-            return 0.8;
+
+        boolean heavyRain = weatherInfo.getRainVolumeLastHour() > 2.0; // More than 2 mm in 1h
+        boolean highWind = weatherInfo.getWindSpeed() > 10.0; // More than 10 m/s wind
+        boolean badWeather = weatherInfo.getDescription() != null &&
+                (weatherInfo.getDescription().toLowerCase().contains("rain") ||
+                        weatherInfo.getDescription().toLowerCase().contains("storm") ||
+                        weatherInfo.getDescription().toLowerCase().contains("snow"));
+
+        if (heavyRain && highWind) {
+            return 0.6; // Heavy rain + wind = high delay
+        } else if (heavyRain || badWeather) {
+            return 0.75; // Just rain or snow
+        } else if (highWind) {
+            return 0.85; // Only wind
+        } else {
+            return 1.0; // Clear weather
         }
-        return 1.0; // Clear or normal weather
     }
+
 
     // Adjust speed based on driver profile (rating out of 5)
     private static double getDriverProfileFactor(double driverRating) {

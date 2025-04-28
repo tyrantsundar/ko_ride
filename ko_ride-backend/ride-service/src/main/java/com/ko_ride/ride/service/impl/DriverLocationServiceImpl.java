@@ -4,11 +4,13 @@ import com.ko_ride.ride.dto.DriverDTO;
 import com.ko_ride.ride.dto.DriverLocationRequest;
 import com.ko_ride.ride.dto.NearbyDriversRequest;
 import com.ko_ride.ride.dto.NearbyDriversResponse;
+import com.ko_ride.ride.model.WeatherInfo;
 import com.ko_ride.ride.quad.Point;
 import com.ko_ride.ride.quad.QuadTree;
 import com.ko_ride.ride.quad.Rectangle;
 import com.ko_ride.ride.service.DriverLocationService;
 import com.ko_ride.ride.service.DriverService;
+import com.ko_ride.ride.service.WeatherService;
 import com.ko_ride.ride.util.DistanceUtil;
 import org.springframework.data.geo.Distance;
 import org.springframework.stereotype.Service;
@@ -26,8 +28,11 @@ public class DriverLocationServiceImpl implements DriverLocationService {
 
     private DriverService driverService;
 
-    public DriverLocationServiceImpl(DriverService driverService) {
+    private WeatherService weatherService;
+
+    public DriverLocationServiceImpl(DriverService driverService, WeatherService weatherService) {
         this.driverService = driverService;
+        this.weatherService = weatherService;
         // Initial boundary can be the whole city or country range (ex: India map bounds)
         this.quadTree = new QuadTree(
                 new Rectangle(20.5937, 78.9629, 20, 20), 4
@@ -55,15 +60,19 @@ public class DriverLocationServiceImpl implements DriverLocationService {
 
         List<NearbyDriversResponse> result = new ArrayList<>();
         for (Point p : candidates) {
-            double distanceKm = DistanceUtil.haversine(lat, lon, p.getLat(), p.getLon());
+
             Optional<DriverDTO> driverOptional = driverService.getDriverById(p.getDriverId());
             if(driverOptional.isEmpty()){
                 System.out.println("Driver with id "+p.getDriverId()+" is not present in the geo point.");
                 continue;
             }
             DriverDTO driverDTO = driverOptional.get();
-            double etaInMin = DistanceUtil.calculateETA(distanceKm,driverDTO.getRating(),"normal", LocalTime.now());
+
+            double distanceKm = DistanceUtil.haversine(lat, lon, p.getLat(), p.getLon());
+            WeatherInfo currentWeather = weatherService.getCurrentWeather(p.getLat(), p.getLon());
+            double etaInMin = DistanceUtil.calculateETA(distanceKm,driverDTO.getRating(),currentWeather, LocalTime.now());
             System.out.println("Driver :: "+p.getDriverId()+" distance :: "+distanceKm+" ETA :: "+etaInMin);
+
             if (distanceKm <= radius) {
                 result.add(new NearbyDriversResponse(p.getDriverId(), distanceKm, etaInMin));
             }
