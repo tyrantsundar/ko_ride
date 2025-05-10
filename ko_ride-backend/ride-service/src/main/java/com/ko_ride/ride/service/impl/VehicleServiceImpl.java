@@ -32,8 +32,8 @@ public class VehicleServiceImpl implements VehicleService {
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
 
         vehicle.setDriver(driver);
-        driver.setVehicle(vehicle);
-        driverRepository.save(driver);
+//        driver.setVehicle(vehicle);
+//        driverRepository.save(driver);
 
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
         return vehicleMapper.toDTO(savedVehicle);
