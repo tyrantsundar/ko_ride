@@ -2,6 +2,7 @@ package com.ko_ride.ride.service.impl;
 
 import com.ko_ride.ride.dto.UserDTO;
 import com.ko_ride.ride.entity.User;
+import com.ko_ride.ride.exception.DuplicateRegistrationException;
 import com.ko_ride.ride.mapper.UserMapper;
 import com.ko_ride.ride.repository.UserRepository;
 import com.ko_ride.ride.service.UserService;
@@ -24,6 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) {
+        if(!userRepository.findByMail(userDTO.getMail()).isEmpty()){
+            throw new DuplicateRegistrationException("User", userDTO.getMail());
+        }
+        if(!userRepository.findByMobileNumber(userDTO.getMobileNumber()).isEmpty()){
+            throw new DuplicateRegistrationException("User", userDTO.getMobileNumber());
+        }
         User user = userMapper.toEntity(userDTO);
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);

@@ -1,5 +1,7 @@
 package com.ko_ride.ride.dto;
 
+import com.ko_ride.ride.entity.DriverStatus;
+
 public class DriverDTO {
 
     private Long driverId;
@@ -12,7 +14,7 @@ public class DriverDTO {
 
     private Long vehicleId;
 
-    private String status; // ONLINE, OFFLINE, BUSY
+    private DriverStatus status; // ONLINE, OFFLINE, BUSY
 
     private double rating;
 
@@ -25,7 +27,7 @@ public class DriverDTO {
         this.mail = mail;
         this.mobileNumber = mobileNumber;
         this.vehicleId = vehicleId;
-        this.status = status;
+        this.status = DriverStatus.valueOf(status);
         this.rating = rating;
     }
 
@@ -69,11 +71,11 @@ public class DriverDTO {
         this.vehicleId = vehicleId;
     }
 
-    public String getStatus() {
+    public DriverStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(DriverStatus status) {
         this.status = status;
     }
 

@@ -18,6 +18,9 @@ public class Driver {
 
     private String mobileNumber;
 
+    @Enumerated
+    private DriverStatus status;
+
     @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL)
     private Vehicle vehicle;
     /**
@@ -105,4 +108,11 @@ public class Driver {
         this.rating = rating;
     }
 
+    public DriverStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DriverStatus status) {
+        this.status = status;
+    }
 }
